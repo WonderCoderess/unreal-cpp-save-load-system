@@ -103,6 +103,10 @@ The Overwrite action saves to `PendingOverwriteSlot`, closes the confirmation ov
 
 The C++ function `GetSaveSlotDisplayInfo()` supplies each slot label and its availability. A slot is enabled when a save exists or the widget is in Save mode; empty slots are disabled in Load mode. The menu applies the returned values to its button labels and enabled states.
 
+`RefreshSlots` gets the Game Instance and uses a Sequence to update slots 1, 2, and 3. Each call passes the slot number and `Is Save Mode` to the C++ helper, then connects `Out Label` to `Set Label` and `Out Is Enabled` to `Set Is Enabled` on the corresponding button.
+
+![RefreshSlots Blueprint updating all three slot labels and enabled states through the C++ display helper](screenshots/Screenshot_07-SaveSlotMenu-Refresh.png)
+
 
 
 ## Demonstration Controls and Test Flow
