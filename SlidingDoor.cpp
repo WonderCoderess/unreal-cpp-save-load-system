@@ -44,10 +44,6 @@ ASlidingDoor::ASlidingDoor()
 void ASlidingDoor::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// Store the initial positions of both door panels.
-	LeftDoorClosedLocation = LeftDoor->GetRelativeLocation();
-	RightDoorClosedLocation = RightDoor->GetRelativeLocation();
 }
 
 void ASlidingDoor::Tick(float DeltaTime)
@@ -174,4 +170,32 @@ void ASlidingDoor::SetDoorOpen(bool bOpen)
 	{
 		CloseDoor();
 	}
+}
+
+// SET DOOR OPEN INSTANT - set the door to open or close instantly based on the specified boolean value.
+void ASlidingDoor::SetDoorOpenInstant(bool bOpen)
+{
+	GetWorldTimerManager().ClearTimer(CloseTimerHandle);
+
+	bShouldOpen = bOpen;
+	OpenAmount = bOpen ? 1.f : 0.f;
+
+	LeftDoor->SetRelativeLocation(
+		LeftDoorClosedLocation
+		+ FVector(0.f, -SlideDistance * OpenAmount, 0.f)
+	);
+
+	RightDoor->SetRelativeLocation(
+		RightDoorClosedLocation
+		+ FVector(0.f, SlideDistance * OpenAmount, 0.f)
+	);
+}
+
+// POST INITIALIZE COMPONENTS - store the initial closed positions of the left and right door panels for later use in opening and closing the door.
+void ASlidingDoor::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	LeftDoorClosedLocation = LeftDoor->GetRelativeLocation();
+	RightDoorClosedLocation = RightDoor->GetRelativeLocation();
 }

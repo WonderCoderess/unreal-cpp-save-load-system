@@ -8,6 +8,45 @@ This repository presents selected source files, Blueprint screenshots, and a gam
 
 [▶ Watch the demo on YouTube](https://youtu.be/lk9QiububXw)
 
+## Gameplay and UI Preview
+
+### Puzzle Test Level
+
+The test scene brings together the movable weight, sliding door, collectible artifacts, and health HUD.
+
+![Puzzle test level with the physics weight, sliding door, artifacts, and health bar](screenshots/Screenshot_thumbnail.png)
+
+### Pause Menu
+
+Saving and loading are available while the game is paused.
+
+![Pause Menu over the puzzle test level](screenshots/Screenshot_thumbnail2.png)
+
+### Main Menu
+
+The showcase starts from the Main Menu, which provides access to New Game and Load Game.
+
+![Save / Load System Main Menu](screenshots/Screenshot_thumbnail3.png)
+
+### Overwrite Confirmation
+
+An occupied slot opens a confirmation overlay with Overwrite and Cancel actions.
+
+![Overwrite confirmation over the timestamped save slots](screenshots/Screenshot_thumbnail4.png)
+
+## Update — 10 November 2026
+
+Added an instant door-state restoration path. When loading a save, the intended behavior is for each puzzle door to appear already open or closed according to the restored weight position, rather than replaying its opening animation from zero. Normal weight placement and removal still use animated movement during gameplay.
+
+| Changed file | Change |
+|---|---|
+| [`SlidingDoor.h`](SlidingDoor.h) | Declares `SetDoorOpenInstant(bool bOpen)` and the `PostInitializeComponents()` override |
+| [`SlidingDoor.cpp`](SlidingDoor.cpp) | Implements instant restoration by clearing the closing timer, setting `bShouldOpen` and `OpenAmount`, and positioning both panels directly without calling the opening/closing sound functions |
+| [`SlidingDoor.cpp`](SlidingDoor.cpp) | Captures closed panel positions in `PostInitializeComponents()` instead of `BeginPlay()`, preparing them before save restoration and preventing later initialization from recording an open position as closed |
+| [`PressurePlate.cpp`](PressurePlate.cpp) | Updates overlaps after restoring the weight and calls `SetDoorOpenInstant()` using the plate's detected occupancy |
+
+The save format is unchanged: the weight transform remains the source of truth for the door state. This update adds the restoration path; the previously observed load-time animation still needs a final runtime check, including overlap availability during level initialization. The linked video was recorded before this update.
+
 ## Assignment Requirements
 
 | Requirement | Implementation |

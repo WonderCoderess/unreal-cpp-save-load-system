@@ -21,14 +21,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Gate")
 	void SetDoorOpen(bool bOpen);
 
+	void SetDoorOpenInstant(bool bOpen);
+
 protected:
 	virtual void BeginPlay() override;
 
-	// Called when the actor is constructed or properties are changed in the editor (to set TriggerBox extent)
 	virtual void OnConstruction(const FTransform& Transform) override;
 
+	virtual void PostInitializeComponents() override;
+
 private:
-	// Gate components
+	// GATE COMPONENTS - Root, frame, sliding panels, and player detection box.
 	UPROPERTY(VisibleAnywhere, Category = "Gate|Components")
 	TObjectPtr<USceneComponent> SceneRoot;
 
@@ -44,6 +47,7 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Gate|Components")
 	TObjectPtr<UBoxComponent> TriggerBox;
 
+	// GATE SETTINGS - Detection area, slide distance, movement duration, closing delay, and player-triggered opening.
 	UPROPERTY(EditAnywhere, Category = "Gate|Settings", meta = (ClampMin = "0.0", Units = "cm"))
 	FVector DetectionSize = FVector(200.f, 200.f, 200.f);
 
@@ -73,13 +77,13 @@ private:
 	// Whether the gate should move towards the open position.
 	bool bShouldOpen = false;
 
-	// The current amount the gate is open, ranging from 0.0 (fully closed) to 1.0 (fully open).
+	// The current amount the gate is open
 	float OpenAmount = 0.0f;
 
 	// Timer handle for scheduling the gate to close after a delay.
 	FTimerHandle CloseTimerHandle;
 
-	// Functions to handle opening and closing the gate.
+	// Open the gate and play the open sound effect if specified.
 	void OpenDoor();
 	void CloseDoor();
 };

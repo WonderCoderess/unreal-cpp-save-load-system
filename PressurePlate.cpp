@@ -100,7 +100,14 @@ bool APressurePlate::RestoreSaveData(const FPressurePlateSaveData& SaveData)
 	}
 
 	TriggerBox->UpdateOverlaps();
-	RefreshDoorState();
+
+	if (IsValid(LinkedDoor))
+	{
+		const bool bWeightOnPlate =
+			TriggerBox->IsOverlappingActor(RequiredWeight);
+
+		LinkedDoor->SetDoorOpenInstant(bWeightOnPlate);
+	}
 
 	return true;
 }
